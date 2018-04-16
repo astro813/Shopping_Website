@@ -1,0 +1,27 @@
+{% extends 'shop/base.html' %}
+{% block title %}Detail{% endblock %}
+
+{% block body %}
+
+    <img srcset="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg">
+
+    <h1>This is all shopping list of cloth</h1>
+    <h2>{{ cloth.brand }}</h2>
+
+    {% if error_message %}
+        <p><strong>{{ error_message }}</strong></p>
+    {% endif %}
+
+        {% csrf_token %}
+        {% for color in cloth.color_set.all %}
+            <input type="checkbox" id="color {{ forloop.counter }}" name="color" value="{{ color.id }}"/>
+            <label for="color {{ forloop.counter }}">
+                {{ color.body_color }}
+                {% if color.is_favorite %}
+                    <img src="http://i.imgur.com/b9b13Rd.png"/>
+                {% endif %}
+            </label><br>
+        {% endfor %}
+        <input type="submit" value="Favorite"><br>
+
+{% endblock %}

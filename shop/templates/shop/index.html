@@ -1,0 +1,11 @@
+    {% extends 'shop/base.html' %}
+    {% block title %}Cloth{% endblock %}
+
+    {% block body %}
+
+        <h1>This is your all shopped cloth: </h1>
+        {% for cloth in object_list %}
+            <li><a href="{% url 'shop:detail' cloth.id%}">{{ cloth.brand }}</a></li>
+        {% endfor %}
+
+    {% endblock %}

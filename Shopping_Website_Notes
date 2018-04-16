@@ -1,0 +1,1467 @@
+************************************************************************************************************************
+README.txt
+
+Python 3.6.4
+Django Version: 2.0.1
+(Using python3 instead of python, Add sudo in front of each command line on terminal)
+
+It Serialized by youtube lessons.
+(url: https://www.youtube.com/watch?v=qgGIqRFvFFk&list=PL6gx4Cwl9DGBlmzzFcLgDhKTTfNLfX1IK)
+Each lessons contain code changing and notes
+
+  The code changing has three ways:
+    CREATE: o
+    ADD TO: . -> O
+    CHANGE TO: O -> 0
+    REPLACE TO: O -> O
+    REMOVE TO: O -> 0
+
+  The notes has a few points listed
+
+To change indentation of a text fragment, try one of the following:
+  1,On the main menu, choose Edit | Indent Selection / Edit | Unindent Selection.
+  2,Press Tab / Shift+Tab.
+************************************************************************************************************************
+
+                                                                        JavaScript
+                   urls->view class          view function                  |
+URLs --------------------> o --------------------> o --------------------> HTML
+                                                   |                        |
+                                                  model                    CSS
+
+
+************************************************************************************************************************
+Syllabus
+
+    1: Installing Django
+
+    2,3,4: Create Project -> Create App -> Overview Basic App
+
+    5: Views(Important)
+
+    6: Database Setup
+
+    7,8: Create Model -> Activate Model
+
+    9,10: Database API -> Database Filter Results
+
+    11: Admin
+
+    12: Other View
+
+    13: Database Connection
+
+    14,15: Template -> Render Template
+
+    16: HTTP 404
+
+    17,18,19: Add Other Model(Color) -> Related Object Set(add color objects) -> Design Detail Template about color
+
+    20,21: Simplification: Remove hardcoded URLs & Namespace and HTTP 404 Shortcut
+
+    22,23,24: Simply Form on Models and URLs(is_favorite) -> Adding Form on Templates(favorite button)-> Finish Function on Views(favorite)
+
+    25,26,27: Bootstrap and Static Files -> Navigation Menu -> Finish Navigation Menu
+
+    28: Create Base Templates(Separate Detail.html and Index.html)
+
+    !!! Delete All
+    29: Create Generic View
+
+    30,31,32: Model Forms -> Create View -> Update View & Delete View
+
+    33: Upload Files
+
+    34, 35, 36: User Registration -> User Model & Create Accounts -> User Authentication & Login
+
+    37, 38, 39, 40: REST API Introduction -> REST API Models -> REST API Serializer JSON -> REST API View Request & Response
+
+************************************************************************************************************************
+
+Django Tutorial for Beginners - 1 - Installing Django
+Notes:FOR INSTALLATION IN MAC:
+      (This my conclusion)
+    1, Python Installation
+       (https://www.python.org/)
+       Download python 3.6.x and installed by default setting.
+
+    2, Pip Installation
+       (https://pip.pypa.io/en/stable/installing/#upgrading-pip)
+       2,1 Saved (https://bootstrap.pypa.io/get-pip.py) as get-pip.py on Mac.
+       2,2 On terminal (cd) direct to the file which get-pip.py saved.
+       2,3 On terminal (sudo python3 get-pip.py).
+       Check version by (pip --version) for Apple Mac default python2.7 or (pip3 --version) for python3.6
+
+    3, Django Installation
+       (https://docs.djangoproject.com/en/2.0/topics/install/#install-the-django-code)
+       Installed by (sudo pip3 install Django).
+       Check version by (django-admin --version).
+
+      FOR INSTALLATION IN WINDOW
+      (This is the video's one)
+    1, Python Installation
+       (https://www.python.org/)
+       Download python 3.6.x and installed by default setting.
+
+    2, Find Python36/Scripts/easy_install and copy Location in Properties.
+       (if didn't find, go (https://bootstrap.pypa.io/ez_setup.py) and save it as easy_install.py and run it by python3)
+
+    3, Open Properties of Computer -> Click Advance System Settings -> Click Environment Variables -> Edit PATH and paste to it
+       (if didn't have create a new PATH and also and the location of Python36 file)
+
+    3, Django Installation
+       Installed by (easy_install Django).
+       Check version by (django-admin --version).
+
+
+Django Tutorial for Beginners - 2 - Creating a Project
+Notes: To create project:
+       (django-admin startproject Shopping_Website)
+       To runserver:
+       (python3 manage.py runserver)
+
+       After run server a db.sqlite3 will appear on your project file.
+
+Django Tutorial for Beginners - 3 - Creating Our First App
+Note: To start app:
+      (python3 manage.py startapp shop)
+
+Django Tutorial for Beginners - 4 - Overview of a Basic App
+
+--IMPORTANT
+Django Tutorial for Beginners - 5 - Views
+
+  urls.py(Shopping_Website)
+  CHANGE
+  {
+    from django.contrib import admin
+    from django.urls import path
+
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+    ]
+  }
+  TO
+  {
+    from django.contrib import admin
+    from django.conf.urls import include, url
+
+    urlpatterns = [
+      url('admin/', admin.site.urls),
+      url(r'^shop/', include('shop.urls')),
+    ]
+  }
+
+  Create urls.py under shop
+  urls.py(shop)
+  CREATE
+  {
+    from django.conf.urls import url
+    from . import views
+
+    urlpatterns = [
+        # /shop/
+        url('^$', views.index, name='index'),
+    ]
+  }
+
+  views.py(shop)
+  CHANGE
+  {
+    from django.shortcuts import render
+
+    # Create your views here.
+
+  }
+  TO
+  {
+    from django.http import HttpResponse
+
+    def index(request):
+      return HttpResponse('<h1>This is Shop homepage<h1>')
+  }
+
+Notes: urls.py(Shopping_Website) -> urls.py(shop) -> views.py(shop)
+       1,After (python manage.py runserver) at terminal,
+       http://127.0.0.1:8000/shop/ will display "This is Shop homepage"
+       2, The django.contrib can import : admin, auth, contenttypes...
+       3, The django.conf.urls can import functions: static, url, include..
+
+
+Django Tutorial for Beginners - 6 - Database Setup
+
+  "Sink it up code with database": (python manage.py migrate)
+  it means INSTALLED_APPS in settings.py(Shopping_Website)
+
+-- IMPORTANT
+Django Tutorial for Beginners - 7 - Creating Models
+
+  models.py(shop)
+  CHANGE
+  {
+    from django.db import models
+
+    # Create your models here.
+  }
+  TO
+  {
+    from django.db import models
+
+    class Cloth(models.Model):
+        type = models.CharField(max_length=250)
+        brand = models.CharField(max_length=250)
+        material = models.CharField(max_length=250)
+        price = models.CharField(max_length=100)
+
+    class Color(models.Model):
+        cloth = models.ForeignKey(Cloth, on_delete=models.CASCADE)
+        sleeve_color = models.CharField(max_length=250)
+        body_color = models.CharField(max_length=250)
+        nect_line_color = models.CharField(max_length=250)
+  }
+
+Notes: 1, Primary Key: consists of one or more columns whose data contained within is used to uniquely identify each row in the table.
+                       You can think of the primary key as an address.
+                       If the rows in a table were mailboxes, then the primary key would be the listing of street addresses.
+       2, Foreign Key: a field (or collection of fields) in one table that uniquely identifies a row of another table or the same table
+       3, Primary Key and Foreign Key is in relational database, (shop) is a table in sql database??? Cloth is Primary Key blueprint, Jacket is Foreign Key blueprint.
+
+--IMPORTANT
+Django Tutorial for Beginners - 8 - Activating Models
+
+  settings.py(Shopping_Website)
+  ADD
+  {
+    'shop.apps.ShopConfig',
+  }
+  TO
+  {
+    INSTALLED_APPS = [
+      'shop.apps.ShopConfig',
+      'django.contrib.admin',
+      'django.contrib.auth',
+      'django.contrib.contenttypes',
+      'django.contrib.sessions',
+      'django.contrib.messages',
+      'django.contrib.staticfiles',
+    ]
+  }
+
+  TERMINAL:
+  (python manage.py makemigrations shop)
+                |
+  (python manage.py migrate)
+
+Notes: create models.py(shop) -> activate models.py(shop)
+
+Django Tutorial for Beginners - 9 - Database API
+
+    TERMINAL:
+    (python manage.py shell)
+    {
+    >>from shop.models import Cloth, Color
+    >>Cloth.objects.all()
+    >>a = Cloth()
+    >>a = Cloth(type='T-shirt', brand='Nike', material='Nylon', price='25')
+    >>a.save()
+    >>b = Cloth()
+    >>b.type = 'Coat'
+    >>b.brand = 'Canada_Goose'
+    >>b.material = 'Cotton'
+    >>b.price = '1000'
+    >>b.save()
+    >>Cloth.objects.all()
+    }
+
+Notes: Any data need save() to database at end.
+
+Django Tutorial for Beginners - 10 - Filtering Database Results
+
+  models.py(shop)
+  ADD
+  {
+    def __str__(self):
+      return self.brand + '-' + self.type
+  }
+  TO
+  {
+    class Cloth(models.Model):
+        type = models.CharField(max_length=250)
+        brand = models.CharField(max_length=250)
+        material = models.CharField(max_length=250)
+        price = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.brand + '-' + self.type
+
+  }
+
+    TERMINAL:
+    (python manage.py shell)
+    {
+        >>Cloth.objects.filter(id=1)
+        >>Cloth.objects.filter(id=2)
+        >>Cloth.objects.filter(type='T-shirt')
+    }
+
+Django Tutorial for Beginners - 11 - Admin Interface
+
+    TERMINAL:
+    (python manage.py createsuperuser)
+    {
+        Username: admin
+        Email: admin@gmail.com
+        Password: 常用
+    }
+
+  admin.py(shop)
+  CHANGE
+  {
+    from django.contrib import admin
+
+    # Register your models here.
+  }
+  TO
+  {
+    from django.contrib import admin
+    from .models import Cloth
+
+    admin.site.register(Cloth)
+  }
+
+Django Tutorial for Beginners - 12 - Writing Another View
+
+  urls.py(shop)
+  ADD
+   {
+        # /shop/23/
+        url(r'^(?P<shop_id>[0-9]+)/$', views.detail, name='detail'),
+   }
+  TO
+  {
+    from django.conf.urls import url
+    from . import views
+
+    urlpatterns = [
+      # /shop/
+      url('^$', views.index, name='index'),
+      # /shop/23/
+      url(r'^(?P<shop_id>[0-9]+)/$', views.detail, name='detail'),
+  ]
+  }
+
+  views.py(shop)
+  ADD
+  {
+    def detail(request, shop_id):
+      return HttpResponse('<h1>This app ID is :' + shop_id + '</h1>')
+  }
+  TO
+  {
+    from django.http import HttpResponse
+
+    def index(request):
+      return HttpResponse('<h1>This is Shop homepage<h1>')
+
+    def detail(request, shop_id):
+      return HttpResponse('<h1>This app ID is :' + shop_id + '</h1>')
+  }
+
+Notes: How to read url: url(r'^ $', , ,),
+
+Django Tutorial for Beginners - 13 - Connecting to the Database
+
+  views.py(shop)
+  CHANGE
+  {
+    from django.http import HttpResponse
+
+    def index(request):
+      return HttpResponse('<h1>This is Shop homepage<h1>')
+
+    def detail(request, shop_id):
+      return HttpResponse('<h1>This app ID is :' + shop_id + '</h1>')
+  }
+  TO
+  {
+    from django.http import HttpResponse
+    from .models import Cloth
+
+    def index(request):
+        html = ''
+        clothes = Cloth.objects.all()
+        for cloth in clothes:
+            url = '/shop/' + str(cloth.id) + '/'
+            html += '<a href = "' + url + '">' + cloth.brand + '</a><br>'
+        return HttpResponse(html)
+
+    def detail(request, shop_id):
+        return HttpResponse('<h1>This app ID is :' + shop_id + '</h1>')
+  }
+
+Notes: He writes the .html in the python logic for better understanding to beginners.
+       This is REALLY NOT GOOD in usual times.
+
+--IMPORTANT
+Django Tutorial for Beginners - 14 - Templates
+
+  views.py(shop)
+  CHANGE
+  {
+    from django.http import HttpResponse
+    from .models import Cloth
+
+    def index(request):
+        html = ''
+        clothes = Cloth.objects.all()
+        for cloth in clothes:
+            url = '/shop/' + str(cloth.id) + '/'
+            html += '<a href = "' + url + '">' + cloth.brand + '</a><br>'
+        return HttpResponse(html)
+
+    def detail(request, shop_id):
+        return HttpResponse('<h1>This app ID is :' + shop_id + '</h1>')
+  }
+  TO
+  {
+    from django.http import HttpResponse
+    from django.template import loader
+    from .models import Cloth
+
+    def index(request):
+        clothes = Cloth.objects.all()
+        template = loader.get_template('index.html')
+        context = {
+            'clothes': clothes,
+        }
+        return HttpResponse(template.render(request, context))
+
+    def detail(request, shop_id):
+        return HttpResponse('<h1>This app ID is :' + shop_id + '</h1>')
+  }
+
+  Create templates at shop
+  Create shop at templates
+  Create index.html under shop under template under shop
+  index.htm(templates)
+  CREATE
+  {
+    <h1>This is your all shopped cloth: </h1>
+    {% if clothes %}
+        {% for cloth in clothes %}
+            <li><a href="/shop/{{ cloth.id }}/">{{ cloth.brand }}</a></li>
+        {% endfor %}
+    {% else %}
+        <li>You didn't have any cloth</li>
+    {% endif %}
+  }
+
+Notes: views.py(shop) -> index.html(templates)
+       1, In index.html if you wanna use instants in views.py: {% if clothes %} or {{cloth.id}}
+       1, The templates means much more .html as template to show on web browser.
+       2, A template contains the static parts of the desired HTML output
+          as well as some special syntax describing how dynamic content will be inserted.
+       3, The django.templates can import : loader, render
+          loader.get_template(), loader.select_template(), render()
+
+Django Tutorial for Beginners - 15 - Render Template Shortcut
+
+  views.py(shop)
+  REPLACE
+  {
+    from django.http import HttpResponse
+    from django.template import loader
+    from .models import Cloth
+
+    def index(request):
+        clothes = Cloth.objects.all()
+        template = loader.get_template('shop/index.html')
+        context = {
+            'clothes': clothes,
+        }
+        return HttpResponse(template.render(context, request))
+
+    def detail(request, shop_id):
+        return HttpResponse('<h1>This app ID is :' + shop_id + '</h1>')
+  }
+  TO
+  {
+    from django.http import HttpResponse
+    from django.shortcuts import render
+    from .models import Cloth
+
+    def index(request):
+    clothes = Cloth.objects.all()
+    context = {'clothes': clothes}
+    return render(request, template_name='shop/index.html', context=context)
+
+    def detail(request, shop_id):
+    return HttpResponse('<h1>This app ID is :' + shop_id + '</h1>')
+  }
+
+Django Tutorial for Beginners - 16 - Raising a 404 HTTP Error
+
+  CREATE detail.index under shop under tempaltes under shop
+  detail.html(shop)
+  {
+    {{cloth}}
+  }
+
+  CHANGE
+  {
+    from django.http import HttpResponse
+    from django.shortcuts import render
+    from .models import Cloth
+
+    def index(request):
+    clothes = Cloth.objects.all()
+    context = {'clothes': clothes}
+    return render(request, template_name='shop/index.html', context=context)
+
+    def detail(request, shop_id):
+    return HttpResponse('<h1>This app ID is :' + shop_id + '</h1>')
+  }
+  TO
+  {
+    from django.http import Http404
+    from django.shortcuts import render
+    from .models import Cloth
+
+    def index(request):
+        clothes = Cloth.objects.all()
+        return render(request, template_name='shop/index.html', context={'clothes': clothes})
+
+    def detail(request, shop_id):
+        try:
+            cloth = Cloth.objects.get(pk=shop_id)
+        except:
+            raise Http404("You didn't have that cloth")
+        return render(request, template_name='shop/detail.html', context={'cloth': cloth})
+  }
+
+Django Tutorial for Beginners - 17 - Adding Songs to our Database
+
+  admin.py(shop)
+  CHANGE
+  {
+    from django.contrib import admin
+    from .models import Cloth
+
+    admin.site.register(Cloth)
+  }
+  TO
+  {
+    from django.contrib import admin
+    from .models import Cloth, Color
+
+    admin.site.register(Cloth)
+    admin.site.register(Color)
+  }
+
+  models.py(shop)
+  ADD
+  {
+    def __str__(self):
+        return self.body_color
+  }
+  TO
+  {
+    from django.db import models
+
+    class Cloth(models.Model):
+        type = models.CharField(max_length=250)
+        brand = models.CharField(max_length=250)
+        material = models.CharField(max_length=250)
+        price = models.CharField(max_length=100)
+
+        def __str__(self):
+            return self.brand + '-' + self.type
+
+    class Color(models.Model):
+        cloth = models.ForeignKey(Cloth, on_delete=models.CASCADE)
+        sleeve_color = models.CharField(max_length=250)
+        body_color = models.CharField(max_length=250)
+        nect_line_color = models.CharField(max_length=250)
+
+        def __str__(self):
+            return self.body_color
+  }
+
+  TERMINAL:
+  >>from shop.models import Cloth, Color
+  >> a = Cloth.objects.get(pk=1)
+  >> b = Color()
+  >> b.cloth = a
+  >> b.sleeve_color = 'red'
+  >> b.body_color = 'red'
+  >> b.nect_line_color = 'rd'
+  >> b.save()
+
+Notes: Only when you change your attributes of models.py, you need sink it up with database.
+       Add or delete one function is not needed.
+
+Django Tutorial for Beginners - 18 - Related Objects Set
+
+  TERMINAL:
+  >> a.color_set.all()
+  >> a.color_set.create(sleeve_color = 'black', body_color = 'black', nect_line_color = 'black')
+  >> a.save()
+
+Django Tutorial for Beginners - 19 - Designing the Details Template
+
+  detail.html(shop)
+  CHANGE
+  {
+    {{cloth}}
+  }
+  TO
+  {
+
+    <img srcset="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg">
+
+    <h1>This is all shopping list of cloth</h1>
+    <h2>{{ cloth.brand }}</h2>
+
+    <ul>
+        {% for col in cloth.color_set.all%}
+            <li>The sleeve color of {{ cloth.brand }} is: {{ col.sleeve_color }}</li>
+            <li>The body color of {{ cloth.brand }} is: {{ col.body_color }}</li>
+            <li>The nect line color of {{ cloth.brand }} is: {{ col.nect_line_color }}</li><br>
+        {% endfor %}
+    </ul>
+  }
+
+Django Tutorial for Beginners - 20 - Removing Hardcoded URLs
+
+  index.html(shop)
+  CHANGE
+  {
+            <li><a href="/shop/{{ cloth.id }}/">{{ cloth.brand }}</a></li>
+  }
+  TO
+  {
+    <h1>This is your all shopped cloth: </h1>
+    {% if clothes %}
+        {% for cloth in clothes %}
+            <li><a href="{% url 'detail' cloth.id %}">{{ cloth.brand }}</a></li>
+        {% endfor %}
+    {% else %}
+        <li>You didn't have any cloth</li>
+    {% endif %}
+  }
+
+Django Tutorial for Beginners - 21 - Namespace and HTTP 404 Shortcut
+
+  urls.py(shop)
+  ADD
+  {
+  app_name = 'shop'
+  }
+  TO
+  {
+    from django.conf.urls import url
+    from . import views
+
+    app_name = 'shop'
+
+    urlpatterns = [
+         # /shop/
+        url('^$', views.index, name='index'),
+        # /shop/23/
+        url(r'^(?P<shop_id>[0-9]+)/$', views.detail, name='detail'),
+    ]
+  }
+
+  index.html(shop)
+  CHANGE
+  {
+            <li><a href="{% url 'detail' cloth.id %}">{{ cloth.brand }}</a></li>
+  }
+  TO
+  {
+    <h1>This is your all shopped cloth: </h1>
+    {% if clothes %}
+        {% for cloth in clothes %}
+            <li><a href="{% url 'shop:detail' cloth.id%}">{{ cloth.brand }}</a></li>
+        {% endfor %}
+    {% else %}
+        <li>You didn't have any cloth</li>
+    {% endif %}
+  }
+
+  views.py(shop)
+  CHANGE
+  {
+    def detail(request, shop_id):
+        try:
+            cloth = Cloth.objects.get(pk=shop_id)
+        except:
+            raise Http404("You didn't have that cloth")
+        return render(request, template_name='shop/detail.html', context={'cloth': cloth})
+  }
+  TO
+  {
+    from django.shortcuts import render, get_object_or_404
+    from .models import Cloth
+
+    def index(request):
+        clothes = Cloth.objects.all()
+        return render(request, template_name='shop/index.html', context={'clothes': clothes})
+
+    def detail(request, shop_id):
+        cloth = get_object_or_404(Cloth, pk=shop_id)
+        return render(request, template_name='shop/detail.html', context={'cloth': cloth})
+  }
+
+Django Tutorial for Beginners - 22 - Simple Form
+
+  models.py(shop)
+  ADD
+  {
+    is_favorite = models.BooleanField(default=False)
+  }
+  TO
+  {
+     from django.db import models
+
+    class Cloth(models.Model):
+        type = models.CharField(max_length=250)
+        brand = models.CharField(max_length=250)
+        material = models.CharField(max_length=250)
+        price = models.CharField(max_length=100)
+
+        def __str__(self):
+            return self.brand + '-' + self.type
+
+    class Color(models.Model):
+        cloth = models.ForeignKey(Cloth, on_delete=models.CASCADE)
+        sleeve_color = models.CharField(max_length=250)
+        body_color = models.CharField(max_length=250)
+        nect_line_color = models.CharField(max_length=250)
+        is_favorite = models.BooleanField(default=False)
+
+        def __str__(self):
+            return self.body_color
+  }
+
+  TERMINAL:
+  (python manage.py makemigrations shop)
+                   |
+  (python manage.py migrate)
+
+  urls.py(shop)
+  ADD
+  {
+    # /shop/23/favorite
+    url(r'^(?P<shop_id>[0-9]+)/favorite/$', views.favorite, name='favorite'),
+  }
+  TO
+  {
+    from django.conf.urls import url
+    from . import views
+
+    app_name = 'shop'
+
+    urlpatterns = [
+         # /shop/
+        url('^$', views.index, name='index'),
+        # /shop/23/
+        url(r'^(?P<shop_id>[0-9]+)/$', views.detail, name='detail'),
+
+        # /shop/23/favorite
+        url(r'^(?P<shop_id>[0-9]+)/favorite/$', views.favorite, name='favorite'),
+    ]
+  }
+
+Django Tutorial for Beginners - 23 - Adding Forms to the Template
+
+  detail.html(shop)
+  CHANGE
+  {
+    <img srcset="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg">
+
+    <h1>This is all shopping list of cloth</h1>
+    <h2>{{ cloth.brand }}</h2>
+
+    <ul>
+        {% for col in cloth.color_set.all%}
+            <li>The sleeve color of {{ cloth.brand }} is: {{ col.sleeve_color }}</li>
+            <li>The body color of {{ cloth.brand }} is: {{ col.body_color }}</li>
+            <li>The nect line color of {{ cloth.brand }} is: {{ col.nect_line_color }}</li><br>
+        {% endfor %}
+    </ul>
+  }
+  TO
+  {
+    <img srcset="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg">
+
+    <h1>This is all shopping list of cloth</h1>
+    <h2>{{ cloth.brand }}</h2>
+
+    {% if error_message %}
+        <p><strong>{{ error_message }}</strong></p>
+    {% endif %}
+
+    <form action="{% url 'shop:favorite' cloth.id %}" method="post">
+        {% csrf_token %}
+        {% for color in cloth.color_set.all %}
+            <input type="checkbox" id="color {{ forloop.counter }}" name="color" value="{{ color.id }}"/>
+            <label for="color {{ forloop.counter }}">
+                {{ color.body_color }}
+                {% if color.is_favorite %}
+                    <img src="http://i.imgur.com/b9b13Rd.png"/>
+                {% endif %}
+            </label><br>
+        {% endfor %}
+        <input type="submit" value="Favorite"><br>
+    </form>
+  }
+
+Django Tutorial for Beginners - 24 - Favorite View Function
+
+  views.py(shop)
+  ADD
+  {
+    def favorite(request, shop_id):
+        cloth = get_object_or_404(Cloth, pk=shop_id)
+        try:
+            selected_color = cloth.color_set.get(pk=request.POST['color'])
+        except (KeyError, Color.DoesNotExist):
+            return render(request, template_name='shop/detail.html', context={
+                'cloth': cloth,
+                'error_message': "You didn't selected any color.",
+            })
+        else:
+            selected_color.is_favorite = True
+            selected_color.save()
+            return render(request, 'shop/detail.html', {'cloth': cloth})
+  }
+  TO
+  {
+    from django.shortcuts import render, get_object_or_404
+    from .models import Cloth, Color
+
+    def index(request):
+        clothes = Cloth.objects.all()
+        return render(request, template_name='shop/index.html', context={'clothes': clothes})
+
+    def detail(request, shop_id):
+        cloth = get_object_or_404(Cloth, pk=shop_id)
+        return render(request, template_name='shop/detail.html', context={'cloth': cloth})
+
+    def favorite(request, shop_id):
+        cloth = get_object_or_404(Cloth, pk=shop_id)
+        try:
+            selected_color = cloth.color_set.get(pk=request.POST['color'])
+        except (KeyError, Color.DoesNotExist):
+            return render(request, template_name='shop/detail.html', context={
+                'cloth': cloth,
+                'error_message': "You didn't selected any color.",
+            })
+        else:
+            selected_color.is_favorite = True
+            selected_color.save()
+            return render(request, 'shop/detail.html', {'cloth': cloth})
+  }
+
+-- IMPORTANT
+Django Tutorial for Beginners - 25 - Bootstrap and Static Files
+Django Tutorial for Beginners - 26 - Navigation Menu
+Django Tutorial for Beginners - 27 - Finishing the Navigation Menu
+
+  CREATE shop/static/shop/images/newyork.png
+  CREATE shop/static/shop/css.css
+  {
+    body{
+        background: white url("images/newyork.png");
+    }
+
+    .navbar{
+        border-radius: 0;
+    }
+
+    .navbar-brand{
+        font-family: 'Satisfy', cursive;
+    }
+  }
+
+  index.html(shop)
+  ADD
+  {
+    {% load staticfiles %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="{% static 'shop/css.css' %}"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+
+            <!-- Header -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'shop:index' %}">
+                    Macy's
+                </a>
+            </div>
+
+            <!-- Items-->
+            <div class="collapse navbar-collapse" id="topNavBar">
+
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="{% url 'shop:index' %}">
+                            <span class="glyphicon glyphicon-cd" aria-hidden="true"></span>&nbsp; Cloth
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-cloth" aria-hidden="true"></span>&nbsp; Color
+                        </a>
+                    </li>
+                </ul>
+
+                <form class="navbar-form navbar-left" role="search" method="get" action="#">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="q" valut="">
+                    </div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                </form>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Cloth
+
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; LogOut
+
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+  }
+  TO
+  {
+    {% load staticfiles %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="{% static 'shop/css.css' %}"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+
+            <!-- Header -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'shop:index' %}">
+                    Macy's
+                </a>
+            </div>
+
+            <!-- Items-->
+            <div class="collapse navbar-collapse" id="topNavBar">
+
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="{% url 'shop:index' %}">
+                            <span class="glyphicon glyphicon-cd" aria-hidden="true"></span>&nbsp; Cloth
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-cloth" aria-hidden="true"></span>&nbsp; Color
+                        </a>
+                    </li>
+                </ul>
+
+                <form class="navbar-form navbar-left" role="search" method="get" action="#">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="q" valut="">
+                    </div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                </form>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Cloth
+
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; LogOut
+
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <h1>This is your all shopped cloth: </h1>
+    {% if clothes %}
+        {% for cloth in clothes %}
+            <li><a href="{% url 'shop:detail' cloth.id%}">{{ cloth.brand }}</a></li>
+        {% endfor %}
+    {% else %}
+        <li>You didn't have any cloth</li>
+    {% endif %}
+  }
+
+Notes: 1, <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+          muust put in front of <link rel="stylesheet" type="text/css" href="{% static 'shop/css.css' %}"/>,
+          otherwise shop/css.css can't using bootstrap.
+       2,
+
+--IMPORTANT
+--REARRANGE LESSSONS 25, 26, 27.
+Django Tutorial for Beginners - 28 - Creating a Base Template
+
+  create base.html(shop)
+  CREATE
+  {
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Macy's{% endblock %}</title>
+        {% load staticfiles %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="{% static 'shop/css.css' %}"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+
+            <!-- Header -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'shop:index' %}">
+                    Macy's
+                </a>
+            </div>
+
+            <!-- Items-->
+            <div class="collapse navbar-collapse" id="topNavBar">
+
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="{% url 'shop:index' %}">
+                            <span class="glyphicon glyphicon-cd" aria-hidden="true"></span>&nbsp; Cloth
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-cloth" aria-hidden="true"></span>&nbsp; Color
+                        </a>
+                    </li>
+                </ul>
+
+                <form class="navbar-form navbar-left" role="search" method="get" action="#">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="q" valut="">
+                    </div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                </form>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Cloth
+
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; LogOut
+
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    </body>
+
+    {% block body %}
+    {% endblock %}
+    </html>
+  }
+
+  index.html
+  CHANGE
+  {
+    {% load staticfiles %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="{% static 'shop/css.css' %}"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+
+            <!-- Header -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'shop:index' %}">
+                    Macy's
+                </a>
+            </div>
+
+            <!-- Items-->
+            <div class="collapse navbar-collapse" id="topNavBar">
+
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="{% url 'shop:index' %}">
+                            <span class="glyphicon glyphicon-cd" aria-hidden="true"></span>&nbsp; Cloth
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-cloth" aria-hidden="true"></span>&nbsp; Color
+                        </a>
+                    </li>
+                </ul>
+
+                <form class="navbar-form navbar-left" role="search" method="get" action="#">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="q" valut="">
+                    </div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                </form>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Cloth
+
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; LogOut
+
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <h1>This is your all shopped cloth: </h1>
+    {% if clothes %}
+        {% for cloth in clothes %}
+            <li><a href="{% url 'shop:detail' cloth.id%}">{{ cloth.brand }}</a></li>
+        {% endfor %}
+    {% else %}
+        <li>You didn't have any cloth</li>
+    {% endif %}
+  }
+  TO
+  {
+    {% extends 'shop/base.html' %}
+    {% block title %}Cloth{% endblock %}
+
+    {% block body %}
+
+        <h1>This is your all shopped cloth: </h1>
+        {% if clothes %}
+            {% for cloth in clothes %}
+                <li><a href="{% url 'shop:detail' cloth.id%}">{{ cloth.brand }}</a></li>
+            {% endfor %}
+        {% else %}
+            <li>You didn't have any cloth</li>
+        {% endif %}
+
+    {% endblock %}
+  }
+
+  detail.html
+  CHANGE
+  {
+    <img srcset="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg">
+
+    <h1>This is all shopping list of cloth</h1>
+    <h2>{{ cloth.brand }}</h2>
+
+    {% if error_message %}
+        <p><strong>{{ error_message }}</strong></p>
+    {% endif %}
+
+    <form action="{% url 'shop:favorite' cloth.id %}" method="post">
+        {% csrf_token %}
+        {% for color in cloth.color_set.all %}
+            <input type="checkbox" id="color {{ forloop.counter }}" name="color" value="{{ color.id }}"/>
+            <label for="color {{ forloop.counter }}">
+                {{ color.body_color }}
+                {% if color.is_favorite %}
+                    <img src="http://i.imgur.com/b9b13Rd.png"/>
+                {% endif %}
+            </label><br>
+        {% endfor %}
+        <input type="submit" value="Favorite"><br>
+    </form>
+
+  }
+  TO
+  {
+    {% extends 'shop/base.html' %}
+    {% block title %}Detail{% endblock %}
+
+    {% block body %}
+
+        <img srcset="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg">
+
+        <h1>This is all shopping list of cloth</h1>
+        <h2>{{ cloth.brand }}</h2>
+
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
+
+        <form action="{% url 'shop:favorite' cloth.id %}" method="post">
+            {% csrf_token %}
+            {% for color in cloth.color_set.all %}
+                <input type="checkbox" id="color {{ forloop.counter }}" name="color" value="{{ color.id }}"/>
+                <label for="color {{ forloop.counter }}">
+                    {{ color.body_color }}
+                    {% if color.is_favorite %}
+                        <img src="http://i.imgur.com/b9b13Rd.png"/>
+                    {% endif %}
+                </label><br>
+            {% endfor %}
+            <input type="submit" value="Favorite"><br>
+        </form>
+
+    {% endblock %}
+  }
+
+Note: index.htm, detail.html, base.html each have their own display part.
+
+--IMPORTANT
+Django Tutorial for Beginners - 29 - Generic Views
+
+  views.py(shop)
+  REPLACE
+  {
+    from django.shortcuts import render, get_object_or_404
+    from .models import Cloth, Color
+
+    def index(request):
+        clothes = Cloth.objects.all()
+        return render(request, template_name='shop/index.html', context={'clothes': clothes})
+
+    def detail(request, shop_id):
+        cloth = get_object_or_404(Cloth, pk=shop_id)
+        return render(request, template_name='shop/detail.html', context={'cloth': cloth})
+
+    def favorite(request, shop_id):
+        cloth = get_object_or_404(Cloth, pk=shop_id)
+        try:
+            selected_color = cloth.color_set.get(pk=request.POST['color'])
+        except (KeyError, Color.DoesNotExist):
+            return render(request, template_name='shop/detail.html', context={
+                'cloth': cloth,
+                'error_message': "You didn't selected any color.",
+            })
+        else:
+            selected_color.is_favorite = True
+            selected_color.save()
+            return render(request, 'shop/detail.html', {'cloth': cloth})
+
+  }
+  To
+  {
+    from django.views import generic
+    from .models import Cloth, Color
+
+    class IndexView(generic.ListView):
+        template_name = 'shop/index.html'
+
+        def get_queryset(self):
+            return Cloth.objects.all()
+
+
+    class DetailView(generic.DetailView):
+        model = Cloth
+        template_name = 'shop/detail.html'
+  }
+
+  urls.py(shop)
+  CHANGE
+  {
+    from django.conf.urls import url
+    from . import views
+
+    app_name = 'shop'
+
+    urlpatterns = [
+         # /shop/
+        url('^$', views.index, name='index'),
+        # /shop/23/
+        url(r'^(?P<shop_id>[0-9]+)/$', views.detail, name='detail'),
+        # /shop/23/favorite
+        url(r'^(?P<shop_id>[0-9]+)/favorite/$', views.favorite, name='favorite'),
+    ]
+  }
+  TO
+  {
+    from django.conf.urls import url
+    from . import views
+
+    app_name = 'shop'
+
+    urlpatterns = [
+         # /shop/
+        url('^$', views.IndexView.as_view(), name='index'),
+        # /shop/23/
+        url(r'^(?P<pk>[0-9]+)/$', views.DetailView.as_view(), name='detail'),
+    ]
+  }
+
+  index.html(shop)
+  CHANGE
+  {
+    {% extends 'shop/base.html' %}
+    {% block title %}Cloth{% endblock %}
+
+    {% block body %}
+
+        <h1>This is your all shopped cloth: </h1>
+        {% if clothes %}
+            {% for cloth in clothes %}
+                <li><a href="{% url 'shop:detail' cloth.id%}">{{ cloth.brand }}</a></li>
+            {% endfor %}
+        {% else %}
+            <li>You didn't have any cloth</li>
+        {% endif %}
+
+    {% endblock %}
+  }
+  TO
+  {
+    {% extends 'shop/base.html' %}
+    {% block title %}Cloth{% endblock %}
+
+    {% block body %}
+
+        <h1>This is your all shopped cloth: </h1>
+        {% for cloth in object_list %}
+            <li><a href="{% url 'shop:detail' cloth.id%}">{{ cloth.brand }}</a></li>
+        {% endfor %}
+
+    {% endblock %}
+  }
+
+  detail.html(shop)
+  CHANGE
+  {
+    {% extends 'shop/base.html' %}
+    {% block title %}Detail{% endblock %}
+
+    {% block body %}
+
+        <img srcset="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg">
+
+        <h1>This is all shopping list of cloth</h1>
+        <h2>{{ cloth.brand }}</h2>
+
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
+
+        <form action="{% url 'shop:favorite' cloth.id %}" method="post">
+            {% csrf_token %}
+            {% for color in cloth.color_set.all %}
+                <input type="checkbox" id="color {{ forloop.counter }}" name="color" value="{{ color.id }}"/>
+                <label for="color {{ forloop.counter }}">
+                    {{ color.body_color }}
+                    {% if color.is_favorite %}
+                        <img src="http://i.imgur.com/b9b13Rd.png"/>
+                    {% endif %}
+                </label><br>
+            {% endfor %}
+            <input type="submit" value="Favorite"><br>
+        </form>
+
+    {% endblock %}
+  }
+  TO
+  {
+    {% extends 'shop/base.html' %}
+    {% block title %}Detail{% endblock %}
+
+    {% block body %}
+
+        <img srcset="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg">
+
+        <h1>This is all shopping list of cloth</h1>
+        <h2>{{ cloth.brand }}</h2>
+
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
+
+            {% csrf_token %}
+            {% for color in cloth.color_set.all %}
+                <input type="checkbox" id="color {{ forloop.counter }}" name="color" value="{{ color.id }}"/>
+                <label for="color {{ forloop.counter }}">
+                    {{ color.body_color }}
+                    {% if color.is_favorite %}
+                        <img src="http://i.imgur.com/b9b13Rd.png"/>
+                    {% endif %}
+                </label><br>
+            {% endfor %}
+            <input type="submit" value="Favorite"><br>
+
+    {% endblock %}
+  }
+
+Notes: 牵一发动一身阿！！！
+
+Django Tutorial for Beginners - 30 - Model Forms
+Django Tutorial for Beginners - 31 - ModelForm and CreateView
+Django Tutorial for Beginners - 32 - UpdateView and DeleteView
+
+Django Tutorial for Beginners - 33 - Upload Files
+
+Django Tutorial for Beginners - 34 - User Registration
+Django Tutorial for Beginners - 35 - User Model and Creating Accounts
+Django Tutorial for Beginners - 36 - User Authentication and Login
+
+Django Tutorial for Beginners - 37 - REST API Introduction
+Django Tutorial for Beginners - 38 - REST API Models
+Django Tutorial for Beginners - 39 - REST API Serializer JSON
+Django Tutorial for Beginners - 40 - REST API View Request and Response
